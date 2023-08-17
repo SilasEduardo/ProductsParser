@@ -1,5 +1,5 @@
 import { app } from '../../server';
 
-app.listen(8080, async () => {
-  console.log(`Servidor rodando na porta 8080`);
+app.listen(3333, async () => {
+  console.log(`Servidor rodando na porta ${process.env.PORT} `);
 });
