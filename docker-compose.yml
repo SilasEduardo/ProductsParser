@@ -4,6 +4,6 @@ services:
     build: .
     container_name: productsparse
     ports:
-      - 8080:8080
+      - 3333:3333
     volumes:
       - .:/user/app
