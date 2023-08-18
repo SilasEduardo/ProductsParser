@@ -1,12 +1,22 @@
 import { MongoClient } from 'mongodb';
 
-async function connectToDatabase(): Promise<MongoClient> {
-  const client = new MongoClient(
-    `mongodb+srv://silas:${process.env.DATABASE_PASS}@cluster0.5yguqpd.mongodb.net/`
-  );
+class Database {
+  private client: MongoClient | null = null;
 
-  await client.connect();
-  return client;
+  async connect(): Promise<MongoClient> {
+    if (!this.client) {
+      const uri = `mongodb+srv://silas:${process.env.DATABASE_PASSWORD}@cluster0.5yguqpd.mongodb.net/`;
+      this.client = new MongoClient(uri);
+      await this.client.connect();
+    }
+    return this.client;
+  }
+
+  async disconnect() {
+    if (this.client) {
+      await this.client.close();
+    }
+  }
 }
 
-export { connectToDatabase };
+export default new Database();

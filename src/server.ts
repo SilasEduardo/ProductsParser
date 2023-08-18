@@ -1,7 +1,8 @@
+import 'reflect-metadata';
 import dotenv from 'dotenv';
 import express from 'express';
-
-import { connectToDatabase } from './shared/http/database';
+import './shared/http/container';
+import database from '@shared/http/database';
 import { router } from './shared/http/routes';
 
 dotenv.config();
@@ -10,7 +11,7 @@ app.use(express.json());
 
 async function startServe() {
   try {
-    await connectToDatabase();
+    await database.connect();
   } catch (error) {
     console.error('Erro ao conectar ao banco de dados:', error);
     return;

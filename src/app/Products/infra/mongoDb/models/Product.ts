@@ -1,20 +1,35 @@
 import { v4 as uuidv4 } from 'uuid';
 
-class Category {
-  id?: string;
-
-  @Column()
-  @Column()
-  description: string;
-
-  @CreateDateColumn()
-  created_at: Date;
+class Product {
+  code?: string;
+  status: string[];
+  imported_t: Date;
+  url: string;
+  creator: string;
+  created_t: number;
+  last_modified_t: number;
+  product_name: string;
+  quantity: string;
+  brands: string;
+  categories: string;
+  labels: string;
+  cities: string;
+  purchase_places: string;
+  stores: string;
+  ingredients_text: string;
+  traces: string;
+  serving_size: string;
+  serving_quantity: number;
+  nutriscore_score: number;
+  nutriscore_grade: string;
+  main_category: string;
+  image_url: string;
 
   constructor() {
-    if (!this.id) {
-      this.id = uuidv4();
+    if (!this.code) {
+      this.code = uuidv4();
     }
   }
 }
 
-export { Category };
+export { Product };

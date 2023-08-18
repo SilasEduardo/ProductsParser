@@ -1,9 +1,10 @@
 import { Router } from 'express';
+import { CreateProductryController } from 'app/Products/useCase/createProduct/createProductController';
 
 const productsRoutes = Router();
 
-productsRoutes.get('/', (req, res) => {
-  res.send('firt rout');
-});
+const createProductController = new CreateProductryController();
+
+productsRoutes.post('/', createProductController.handle);
 
 export { productsRoutes };
