@@ -1,4 +1,4 @@
-import { Collection } from 'mongodb';
+import { Db } from 'mongodb';
 
 import database from '@shared/http/database';
 
@@ -7,16 +7,16 @@ import { IProductRepository } from '../../IProductRepository';
 import { Product } from '../models/Product';
 
 class PoductRepository implements IProductRepository {
-  private collectionPromise: Promise<Collection>;
+  private collectionPromise: Promise<Db>;
 
   constructor() {
     this.collectionPromise = this.initCollection();
   }
 
-  private async initCollection(): Promise<Collection> {
+  private async initCollection(): Promise<Db> {
     const client = await database.connect();
     const db = client.db();
-    return db.collection('products');
+    return db;
   }
 
   async create({
@@ -42,7 +42,7 @@ class PoductRepository implements IProductRepository {
     traces,
     url,
   }: ICreateProductDTO): Promise<void> {
-    const collection = await this.collectionPromise;
+    const db = await this.collectionPromise;
 
     const product = new Product();
 
@@ -71,7 +71,7 @@ class PoductRepository implements IProductRepository {
       image_url,
     });
 
-    await collection.insertOne(newProduct);
+    await db.collection('product').insertOne(newProduct);
   }
 }
 

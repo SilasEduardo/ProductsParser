@@ -1,7 +1,12 @@
-import { MongoClient } from 'mongodb';
+import { Db, MongoClient } from 'mongodb';
 
 class Database {
   private client: MongoClient | null = null;
+  db: Db | undefined;
+
+  constructor() {
+    this.db = this.client?.db();
+  }
 
   async connect(): Promise<MongoClient> {
     if (!this.client) {
