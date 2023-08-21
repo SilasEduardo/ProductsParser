@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as zlib from 'zlib';
 import * as readline from 'readline';
+import moment from 'moment-timezone';
 import { Db } from 'mongodb';
 import axios from 'axios';
 import database from '@shared/http/database';
@@ -27,25 +28,31 @@ class CronRepository implements ICronRepository {
       'https://challenges.coode.sh/food/data/json/index.txt'
     );
     const names = getNames.data.trim().split('\n');
+    const collections = await db.listCollections({}).toArray();
+
+    if (collections.length > 9) {
+      console.log('all files are already created');
+      return;
+    }
 
     for await (const name of names) {
-      const nameCollectio: any = `${name.split('.')[0]}.json`;
-
-      console.log(nameCollectio);
-      const collectionExists = await db
-        .listCollections({ name: nameCollectio })
-        .toArray();
-      console.log(collectionExists);
-
-      if (collectionExists.length) {
-        console.log('Database is already updated', name);
-        return;
+      let number = 1;
+      if (collections.length > 0) {
+        number = Math.max(
+          ...collections
+            .map((doc) => parseInt(doc.name[10], 10))
+            .filter((number) => number)
+        );
+        number++;
       }
 
-      const nameFile = name.replace('.json.gz', '.json');
-      await this.downloadFileFromURL('products_01.json.gz');
-      await this.extractGzipFile(name, nameFile);
+      const fileName = `products_0${number}.json.gz`;
+
+      const nameFile = fileName.replace('.json.gz', '.json');
+      await this.downloadFileFromURL(fileName);
+      await this.extractGzipFile(fileName, nameFile);
       await this.insertToDB(nameFile);
+      console.log(`${name} was created in the database `);
 
       return;
     }
@@ -73,6 +80,14 @@ class CronRepository implements ICronRepository {
       });
     } catch (error) {
       console.error('Error in the request:', error);
+    }
+  }
+  async deleteFile(nameJson: string): Promise<void> {
+    try {
+      fs.unlinkSync(`./src/shared/tmp/${nameJson}`);
+      console.log('File deleted successfully.');
+    } catch (err) {
+      console.error('An error occurred while deleting the file:', err);
     }
   }
   async extractGzipFile(
@@ -156,11 +171,17 @@ class CronRepository implements ICronRepository {
         image_url: fileProducts[i].image_url,
       };
 
-      await db.collection('products').insertOne(data);
+      await db.collection(name).insertOne(data);
       console.log('insert product in db');
     }
-    await db.collection('fileName').insertOne({ name });
+    const importedDate = moment(new Date(), 'America/Sao_Paulo');
+    await db
+      .collection('import_history')
+      .insertOne({ name, import_date: importedDate });
     console.log('insert file in db');
+    this.deleteFile(`${name}`);
+    this.deleteFile(`${name}.gz`);
+    console.log('DONE');
   }
 }
 

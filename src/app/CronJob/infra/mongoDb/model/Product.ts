@@ -1,7 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
-
 class Product {
-  code?: string;
+  code: string;
   status: string[];
   imported_t: Date;
   url: string;
@@ -24,12 +22,6 @@ class Product {
   nutriscore_grade: string;
   main_category: string;
   image_url: string;
-
-  constructor() {
-    if (!this.code) {
-      this.code = uuidv4();
-    }
-  }
 }
 
 export { Product };
