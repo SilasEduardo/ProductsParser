@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as zlib from 'zlib';
 import * as readline from 'readline';
-import moment from 'moment-timezone';
+import { format } from 'date-fns';
 import { Db } from 'mongodb';
 import axios from 'axios';
 import database from '@shared/http/database';
@@ -174,7 +174,14 @@ class CronRepository implements ICronRepository {
       await db.collection(name).insertOne(data);
       console.log('insert product in db');
     }
-    const importedDate = moment(new Date(), 'America/Sao_Paulo');
+    const now = new Date();
+    const formattedDate = format(now, 'dd/MM/yyyy');
+    const formattedTime = format(now, 'HH:mm:ss');
+
+    const importedDate = {
+      date: formattedDate,
+      hour: formattedTime,
+    };
     await db
       .collection('import_history')
       .insertOne({ name, import_date: importedDate });

@@ -1,5 +1,4 @@
 import { inject, injectable } from 'tsyringe';
-import { CronRepository } from 'app/CronJob/infra/mongoDb/repositories/CronRepository';
 import { ICronRepository } from 'app/CronJob/infra/ICronRepostory';
 
 @injectable()
@@ -8,9 +7,8 @@ class CreateCronUseCase {
     @inject('CronRepository')
     private poductRepository: ICronRepository
   ) {}
-  execute() {
-    const cronReposity = new CronRepository();
-    cronReposity.updateDB();
+  async execute() {
+    await this.poductRepository.updateDB();
   }
 }
 

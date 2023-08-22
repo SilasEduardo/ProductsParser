@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { CreateProductryController } from 'app/Products/useCase/createProduct/createProductController';
+import { StatusAPIController } from 'app/Products/useCase/statusAPI/statusAPIController';
 
 const productsRoutes = Router();
 
-const createProductController = new CreateProductryController();
+const statusAPIController = new StatusAPIController();
 
-productsRoutes.post('/', createProductController.handle);
+productsRoutes.get('/', statusAPIController.handle);
 
 export { productsRoutes };

@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import './shared/http/container';
 import database from '@shared/http/database';
-import '@config/cronConfig';
+// import '@config/cronConfig';
 import { router } from './shared/http/routes';
 
 dotenv.config();
@@ -18,6 +18,7 @@ async function startServe() {
     return;
   }
   app.use(router);
+  app.use(express.json());
 }
 
 startServe();

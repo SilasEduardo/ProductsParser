@@ -1,7 +1,11 @@
-import { ICreateProductDTO } from '../dtos/ICreateProductDTO';
+import { IGetProductDTO } from '../dtos/IGetProductDTO';
 
 interface IProductRepository {
-  create(data: ICreateProductDTO): Promise<void>;
+  statusApi(): Promise<IGetProductDTO>;
+  getProduct(code: string): Promise<void>;
+  listProducts(): Promise<void>;
+  deleteProduc(code: string): Promise<void>;
+  updateProduct(code: string): Promise<void>;
 }
 
 export { IProductRepository };
