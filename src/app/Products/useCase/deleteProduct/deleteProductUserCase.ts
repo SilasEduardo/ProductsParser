@@ -2,15 +2,15 @@ import { inject, injectable } from 'tsyringe';
 import { IProductRepository } from 'app/Products/infra/IProductRepository';
 
 @injectable()
-class StatusAPIUserCase {
+class DeleteProductUserCase {
   constructor(
     @inject('ProductRepository')
     private poductRepository: IProductRepository
   ) {}
-  async execute() {
-    const dataStatus = await this.poductRepository.statusApi();
-    return dataStatus;
+  async execute(code: string) {
+    const product = await this.poductRepository.deleteProduc(code);
+    return product;
   }
 }
 
-export { StatusAPIUserCase };
+export { DeleteProductUserCase };

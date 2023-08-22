@@ -2,15 +2,15 @@ import { inject, injectable } from 'tsyringe';
 import { IProductRepository } from 'app/Products/infra/IProductRepository';
 
 @injectable()
-class StatusAPIUserCase {
+class ListAllProductUserCase {
   constructor(
     @inject('ProductRepository')
     private poductRepository: IProductRepository
   ) {}
-  async execute() {
-    const dataStatus = await this.poductRepository.statusApi();
-    return dataStatus;
+  execute() {
+    const product = this.poductRepository.listProducts();
+    return product;
   }
 }
 
-export { StatusAPIUserCase };
+export { ListAllProductUserCase };

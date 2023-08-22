@@ -22,6 +22,7 @@
         "prettier"
     ],
     "rules": {
+        "consistent-return": "off",
         "prefer-destructuring": "off",
         "no-unreachable-loop": "off",
         "@typescript-eslint/no-explicit-any": "off",

@@ -1,10 +1,10 @@
-import { Db } from 'mongodb';
+import { Db, WithId } from 'mongodb';
 import database from '@shared/http/database';
 import { IGetProductDTO } from 'app/Products/dtos/IGetProductDTO';
 import { timeExucute, getMemoryUsage } from '@shared/Utils/timeExeculte';
 import { IProductRepository } from '../../IProductRepository';
 
-class PoductRepository implements IProductRepository {
+class ProductRepository implements IProductRepository {
   private collectionPromise: Promise<Db>;
 
   constructor() {
@@ -30,18 +30,77 @@ class PoductRepository implements IProductRepository {
     return dataStatus;
   }
 
-  getProduct(code: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  // eslint-disable-next-line consistent-return
+  async getProduct(code: string): Promise<WithId<Document> | null | undefined> {
+    try {
+      const db = await this.collectionPromise;
+      const collections: any = await db.listCollections().toArray();
+
+      for (const collectionInfo of collections) {
+        const collectionName = collectionInfo.name;
+        const collection = db.collection(collectionName);
+
+        const productExist: any = await collection.findOne({ code });
+        if (productExist) {
+          return productExist;
+        }
+      }
+
+      console.log('document does not exist.');
+    } catch (error: any) {
+      console.error('Erro:', error);
+    }
   }
-  listProducts(): Promise<void> {
-    throw new Error('Method not implemented.');
+
+  async listProducts(): Promise<Array<any> | undefined> {
+    try {
+      const db = await this.collectionPromise;
+      const collections: any = await db.listCollections().toArray();
+      const allProducts: any[] = [];
+
+      for (const collectionInfo of collections) {
+        const collectionName = collectionInfo.name;
+        const collection = db.collection(collectionName);
+
+        const productsInCollection: any[] = await collection.find({}).toArray();
+        allProducts.push(...productsInCollection);
+      }
+
+      if (allProducts.length > 1) {
+        return allProducts;
+      }
+
+      console.log('document does not exist.');
+    } catch (error: any) {
+      console.error('Erro:', error);
+    }
   }
-  deleteProduc(code: string): Promise<void> {
-    throw new Error('Method not implemented.');
+
+  async deleteProduc(code: string): Promise<number | undefined> {
+    try {
+      const db = await this.collectionPromise;
+      const collections: any = await db.listCollections().toArray();
+
+      for (const collectionInfo of collections) {
+        const collectionName = collectionInfo.name;
+        const collection = db.collection(collectionName);
+
+        const result = await collection.deleteOne({ code });
+        if (result.deletedCount === 1) {
+          console.log(`Document deleted in collection ${collectionName}.`);
+          return result.deletedCount; // Para interromper após a primeira exclusão bem-sucedida
+        }
+      }
+
+      console.log('document does not exist.');
+    } catch (error: any) {
+      console.error('Erro:', error);
+    }
   }
-  updateProduct(code: string): Promise<void> {
+
+  async updateProduct(code: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
 }
 
-export { PoductRepository };
+export { ProductRepository };
