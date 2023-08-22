@@ -76,19 +76,25 @@ class ProductRepository implements IProductRepository {
     }
   }
 
-  async deleteProduc(code: string): Promise<number | undefined> {
+  async deleteProduc(code: string): Promise<void> {
     try {
       const db = await this.collectionPromise;
+
       const collections: any = await db.listCollections().toArray();
 
+      const status = ['trash'];
+      const update = {
+        $set: {
+          status,
+        },
+      };
       for (const collectionInfo of collections) {
         const collectionName = collectionInfo.name;
         const collection = db.collection(collectionName);
-
-        const result = await collection.deleteOne({ code });
-        if (result.deletedCount === 1) {
+        const result = await collection.updateOne({ code }, update);
+        if (result.modifiedCount === 1) {
           console.log(`Document deleted in collection ${collectionName}.`);
-          return result.deletedCount; // Para interromper após a primeira exclusão bem-sucedida
+          // Para interromper após a primeira exclusão bem-sucedida
         }
       }
 
@@ -98,8 +104,33 @@ class ProductRepository implements IProductRepository {
     }
   }
 
-  async updateProduct(code: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  async updateProduct(code: string, data: any): Promise<void> {
+    try {
+      const { product_name, quantity } = data;
+      const db = await this.collectionPromise;
+      const collections: any = await db.listCollections().toArray();
+      const filter = { code };
+      const update = {
+        $set: {
+          product_name,
+          quantity,
+        },
+      };
+
+      for (const collectionInfo of collections) {
+        const collectionName = collectionInfo.name;
+        const collection = db.collection(collectionName);
+
+        const productE: any = await collection.updateOne(filter, update);
+        if (productE.modifiedCount === 1) {
+          console.log('Document successfully updated.');
+          return;
+        }
+      }
+      console.log('Document not found or not updated.');
+    } catch (error: any) {
+      console.error('Erro:', error);
+    }
   }
 }
 
