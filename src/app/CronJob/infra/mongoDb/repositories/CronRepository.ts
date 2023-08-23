@@ -4,8 +4,8 @@ import * as readline from 'readline';
 import { format } from 'date-fns';
 import { Db } from 'mongodb';
 import axios from 'axios';
+import { Product } from '@app/CronJob/infra/mongoDb/model/Product';
 import database from '@shared/http/database';
-import { Product } from 'app/Products/infra/mongoDb/models/Product';
 
 import { ICronRepository } from '../../ICronRepostory';
 
@@ -62,7 +62,7 @@ class CronRepository implements ICronRepository {
     const url = `https://challenges.coode.sh/food/data/json/${filename}`;
     try {
       const response = await axios.get(url, { responseType: 'stream' });
-      const fileStream = fs.createWriteStream(`./src/shared/tmp/${filename}`);
+      const fileStream = fs.createWriteStream(`./tmp/${filename}`);
 
       response.data.pipe(fileStream);
 
@@ -84,7 +84,7 @@ class CronRepository implements ICronRepository {
   }
   async deleteFile(nameJson: string): Promise<void> {
     try {
-      fs.unlinkSync(`./src/shared/tmp/${nameJson}`);
+      fs.unlinkSync(`./tmp/${nameJson}`);
       console.log('File deleted successfully.');
     } catch (err) {
       console.error('An error occurred while deleting the file:', err);
@@ -95,12 +95,8 @@ class CronRepository implements ICronRepository {
     outputFilename: string
   ): Promise<void> {
     try {
-      const readStream = fs.createReadStream(
-        `./src/shared/tmp/${inputFilename}`
-      );
-      const writeStream = fs.createWriteStream(
-        `./src/shared/tmp/${outputFilename}`
-      );
+      const readStream = fs.createReadStream(`./tmp/${inputFilename}`);
+      const writeStream = fs.createWriteStream(`./tmp/${outputFilename}`);
 
       const unzip = zlib.createGunzip();
       readStream.pipe(unzip).pipe(writeStream);
@@ -124,7 +120,7 @@ class CronRepository implements ICronRepository {
 
   async insertToDB(name: string): Promise<void> {
     const db = await this.collectionPromise;
-    const filePath = `./src/shared/tmp/${name}`;
+    const filePath = `./tmp/${name}`;
     const fileProducts = [];
 
     const readStream = fs.createReadStream(filePath, { encoding: 'utf8' });
@@ -141,13 +137,21 @@ class CronRepository implements ICronRepository {
         console.error('Error processing line:', error);
       }
     }
+    const status = {
+      enum: ['draft', 'trash', 'published'],
+      default: 'published', // Valor padrão
+      function() {
+        if (!this.enum.some((v) => v === this.default))
+          return console.log(' e esperado draft, trash, published');
+      },
+    };
 
     for (let i = 0; i < fileProducts.length; i++) {
       fileProducts[i].code = fileProducts[i].code.slice(1);
       const code = parseInt(fileProducts[i].code, 10);
       const data: Product = {
         code: String(code),
-        status: ['published'],
+        status,
         imported_t: new Date(),
         url: fileProducts[i].url,
         creator: fileProducts[i].creator,

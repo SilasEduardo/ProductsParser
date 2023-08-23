@@ -1,5 +1,5 @@
 import { inject, injectable } from 'tsyringe';
-import { IProductRepository } from 'app/Products/infra/IProductRepository';
+import { IProductRepository } from '@app/Products/infra/IProductRepository';
 
 @injectable()
 class ListAllProductUserCase {

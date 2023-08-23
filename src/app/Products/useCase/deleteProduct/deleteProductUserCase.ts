@@ -1,5 +1,5 @@
 import { inject, injectable } from 'tsyringe';
-import { IProductRepository } from 'app/Products/infra/IProductRepository';
+import { IProductRepository } from '@app/Products/infra/IProductRepository';
 
 @injectable()
 class DeleteProductUserCase {
@@ -9,6 +9,7 @@ class DeleteProductUserCase {
   ) {}
   async execute(code: string) {
     const product = await this.poductRepository.deleteProduc(code);
+    console.log(product);
     return product;
   }
 }

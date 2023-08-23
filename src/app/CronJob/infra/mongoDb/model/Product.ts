@@ -1,6 +1,6 @@
 class Product {
   code: string;
-  status: string[];
+  status: any;
   imported_t: Date;
   url: string;
   creator: string;

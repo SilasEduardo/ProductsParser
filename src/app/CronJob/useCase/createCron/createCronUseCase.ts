@@ -1,5 +1,5 @@
 import { inject, injectable } from 'tsyringe';
-import { ICronRepository } from 'app/CronJob/infra/ICronRepostory';
+import { ICronRepository } from '@app/CronJob/infra/ICronRepostory';
 
 @injectable()
 class CreateCronUseCase {

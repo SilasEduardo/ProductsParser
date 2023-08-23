@@ -1,7 +1,7 @@
-import { Db, WithId } from 'mongodb';
+import { Db, WithId, UpdateResult } from 'mongodb';
+import { IGetProductDTO } from '@app/Products/dtos/IGetProductDTO';
 import database from '@shared/http/database';
-import { IGetProductDTO } from 'app/Products/dtos/IGetProductDTO';
-import { timeExucute, getMemoryUsage } from '@shared/Utils/timeExeculte';
+import { timeExucute, getMemoryUsage } from '@utils/timeExeculte';
 import { IProductRepository } from '../../IProductRepository';
 
 class ProductRepository implements IProductRepository {
@@ -76,13 +76,24 @@ class ProductRepository implements IProductRepository {
     }
   }
 
-  async deleteProduc(code: string): Promise<void> {
+  async deleteProduc(
+    code: string
+  ): Promise<UpdateResult<Document> | undefined> {
     try {
       const db = await this.collectionPromise;
 
       const collections: any = await db.listCollections().toArray();
 
-      const status = ['trash'];
+      const status = {
+        enum: ['draft', 'trash', 'published'],
+        default: 'transh', // Valor padrão
+        function() {
+          if (!this.enum.some((v) => v === this.default))
+            return console.log(' e esperado draft, trash, published');
+        },
+      };
+
+      status.function();
       const update = {
         $set: {
           status,
@@ -91,10 +102,10 @@ class ProductRepository implements IProductRepository {
       for (const collectionInfo of collections) {
         const collectionName = collectionInfo.name;
         const collection = db.collection(collectionName);
-        const result = await collection.updateOne({ code }, update);
+        const result: any = await collection.updateOne({ code }, update);
         if (result.modifiedCount === 1) {
           console.log(`Document deleted in collection ${collectionName}.`);
-          // Para interromper após a primeira exclusão bem-sucedida
+          return result.modifiedCount;
         }
       }
 

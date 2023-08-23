@@ -1,4 +1,3 @@
-import { exec } from 'child_process';
 import cron from 'node-cron';
 import axios from 'axios';
 
