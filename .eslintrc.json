@@ -22,6 +22,7 @@
         "prettier"
     ],
     "rules": {
+        "no-unneeded-ternary": "off",
         "consistent-return": "off",
         "prefer-destructuring": "off",
         "no-unreachable-loop": "off",
