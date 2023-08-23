@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { inject, injectable } from 'tsyringe';
 import { ICronRepository } from '@app/CronJob/infra/ICronRepostory';
 
@@ -8,7 +9,9 @@ class CreateCronUseCase {
     private poductRepository: ICronRepository
   ) {}
   async execute() {
-    await this.poductRepository.updateDB();
+    const product = await this.poductRepository.updateDB();
+
+    return product;
   }
 }
 

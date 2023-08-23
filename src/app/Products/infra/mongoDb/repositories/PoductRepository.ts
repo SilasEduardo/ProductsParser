@@ -1,7 +1,8 @@
 import { Db, WithId, UpdateResult } from 'mongodb';
 import { IGetProductDTO } from '@app/Products/dtos/IGetProductDTO';
 import database from '@shared/http/database';
-import { timeExucute, getMemoryUsage } from '@utils/timeExeculte';
+import { runtime, getMemoryUsage } from '@utils/statusSistema';
+import { status } from '@utils/fileImports';
 import { IProductRepository } from '../../IProductRepository';
 
 class ProductRepository implements IProductRepository {
@@ -24,7 +25,7 @@ class ProductRepository implements IProductRepository {
 
     const dataStatus = {
       lastCronTime: document.import_date.hour,
-      runtime: timeExucute(),
+      runtime: runtime(),
       memoryInUse: getMemoryUsage(),
     };
     return dataStatus;
@@ -84,19 +85,9 @@ class ProductRepository implements IProductRepository {
 
       const collections: any = await db.listCollections().toArray();
 
-      const status = {
-        enum: ['draft', 'trash', 'published'],
-        default: 'transh', // Valor padrão
-        function() {
-          if (!this.enum.some((v) => v === this.default))
-            return console.log(' e esperado draft, trash, published');
-        },
-      };
-
-      status.function();
       const update = {
         $set: {
-          status,
+          status: status(code),
         },
       };
       for (const collectionInfo of collections) {

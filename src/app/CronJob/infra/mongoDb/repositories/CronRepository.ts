@@ -1,11 +1,11 @@
 import * as fs from 'fs';
-import * as zlib from 'zlib';
 import * as readline from 'readline';
 import { format } from 'date-fns';
 import { Db } from 'mongodb';
 import axios from 'axios';
 import { Product } from '@app/CronJob/infra/mongoDb/model/Product';
 import database from '@shared/http/database';
+import { downloadFile, extractFile, status } from '@utils/fileImports';
 
 import { ICronRepository } from '../../ICronRepostory';
 
@@ -21,7 +21,8 @@ class CronRepository implements ICronRepository {
     const db = client.db();
     return db;
   }
-  async updateDB(): Promise<void> {
+
+  async updateDB(): Promise<boolean | undefined> {
     const db = await this.collectionPromise;
 
     const getNames = await axios.get(
@@ -32,7 +33,7 @@ class CronRepository implements ICronRepository {
 
     if (collections.length > 9) {
       console.log('all files are already created');
-      return;
+      return true;
     }
 
     for await (const name of names) {
@@ -54,7 +55,7 @@ class CronRepository implements ICronRepository {
       await this.insertToDB(nameFile);
       console.log(`${name} was created in the database `);
 
-      return;
+      return true;
     }
   }
 
@@ -64,32 +65,24 @@ class CronRepository implements ICronRepository {
       const response = await axios.get(url, { responseType: 'stream' });
       const fileStream = fs.createWriteStream(`./tmp/${filename}`);
 
-      response.data.pipe(fileStream);
-
-      await new Promise<void>((resolve, reject) => {
-        fileStream.on('finish', () => {
-          fileStream.close();
-          console.log('download completed');
-          resolve();
-        });
-
-        fileStream.on('error', (err) => {
-          console.error('Error downloading file:', err);
-          reject(err);
-        });
-      });
+      const download = await downloadFile(fileStream, response);
+      return download;
     } catch (error) {
       console.error('Error in the request:', error);
     }
   }
-  async deleteFile(nameJson: string): Promise<void> {
+
+  async deleteFile(nameJson: string): Promise<boolean> {
     try {
       fs.unlinkSync(`./tmp/${nameJson}`);
       console.log('File deleted successfully.');
+      return true;
     } catch (err) {
       console.error('An error occurred while deleting the file:', err);
+      return false;
     }
   }
+
   async extractGzipFile(
     inputFilename: string,
     outputFilename: string
@@ -97,22 +90,8 @@ class CronRepository implements ICronRepository {
     try {
       const readStream = fs.createReadStream(`./tmp/${inputFilename}`);
       const writeStream = fs.createWriteStream(`./tmp/${outputFilename}`);
-
-      const unzip = zlib.createGunzip();
-      readStream.pipe(unzip).pipe(writeStream);
-
-      await new Promise<void>((resolve, reject) => {
-        writeStream.on('finish', () => {
-          writeStream.close();
-          console.log('Completed extraction');
-          resolve();
-        });
-
-        writeStream.on('error', (err) => {
-          console.error('Error extracting file:', err);
-          reject(err);
-        });
-      });
+      const extract = await extractFile(readStream, writeStream);
+      return extract;
     } catch (error) {
       console.error('Error in extraction:', error);
     }
@@ -137,21 +116,13 @@ class CronRepository implements ICronRepository {
         console.error('Error processing line:', error);
       }
     }
-    const status = {
-      enum: ['draft', 'trash', 'published'],
-      default: 'published', // Valor padrão
-      function() {
-        if (!this.enum.some((v) => v === this.default))
-          return console.log(' e esperado draft, trash, published');
-      },
-    };
 
     for (let i = 0; i < fileProducts.length; i++) {
       fileProducts[i].code = fileProducts[i].code.slice(1);
       const code = parseInt(fileProducts[i].code, 10);
       const data: Product = {
         code: String(code),
-        status,
+        status: status('published'),
         imported_t: new Date(),
         url: fileProducts[i].url,
         creator: fileProducts[i].creator,

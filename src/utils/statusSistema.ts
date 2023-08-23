@@ -29,7 +29,7 @@ export function getMemoryUsage() {
   return formattedMemoryUsage;
 }
 
-export function timeExucute() {
+export function runtime() {
   const uptimeInSeconds = Math.floor(process.uptime());
   const hours = Math.floor(uptimeInSeconds / 3600);
   const minutes = Math.floor((uptimeInSeconds % 3600) / 60);
