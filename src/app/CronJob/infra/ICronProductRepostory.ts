@@ -1,4 +1,4 @@
-interface ICronRepository {
+interface ICronProductRepository {
   downloadFileFromURL(filename: string): Promise<void>;
   extractGzipFile(inputFilename: string, outputFilename: string): Promise<void>;
   insertToDB(name: string): Promise<void>;
@@ -6,4 +6,4 @@ interface ICronRepository {
   deleteFile(nameJson: string): Promise<boolean>;
 }
 
-export { ICronRepository };
+export { ICronProductRepository };

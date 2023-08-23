@@ -1,12 +1,12 @@
-import { CronRepositoryInMemory } from '../../infra/mongoDb/in-memory/CronRepositoryInMemory';
-import { CreateCronUseCase } from './createCronUseCase';
+import { CronProductRepositoryInMemory } from '../../infra/mongoDb/in-memory/CronProductRepositoryInMemory';
+import { CreateCronProductUseCase } from './createCronProductUseCase';
 
-let createCronUseCase: CreateCronUseCase;
-let cronRepositoryInMemory: CronRepositoryInMemory;
+let createCronUseCase: CreateCronProductUseCase;
+let cronRepositoryInMemory: CronProductRepositoryInMemory;
 describe('Create product', () => {
   beforeAll(() => {
-    cronRepositoryInMemory = new CronRepositoryInMemory();
-    createCronUseCase = new CreateCronUseCase(cronRepositoryInMemory);
+    cronRepositoryInMemory = new CronProductRepositoryInMemory();
+    createCronUseCase = new CreateCronProductUseCase(cronRepositoryInMemory);
   });
 
   it('shoult be able create a new product', () => {

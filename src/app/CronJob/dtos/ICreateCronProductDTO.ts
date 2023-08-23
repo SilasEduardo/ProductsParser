@@ -1,4 +1,4 @@
-interface ICreateCronDTO {
+interface ICreateCronProductDTO {
   status: string[];
   url: string;
   creator: string;
@@ -22,4 +22,4 @@ interface ICreateCronDTO {
   image_url: string;
 }
 
-export { ICreateCronDTO };
+export { ICreateCronProductDTO };

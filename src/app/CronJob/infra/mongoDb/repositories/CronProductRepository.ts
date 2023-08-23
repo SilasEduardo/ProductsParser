@@ -7,9 +7,9 @@ import { Product } from '@app/CronJob/infra/mongoDb/model/Product';
 import database from '@shared/http/database';
 import { downloadFile, extractFile, status } from '@utils/fileImports';
 
-import { ICronRepository } from '../../ICronRepostory';
+import { ICronProductRepository } from '../../ICronProductRepostory';
 
-class CronRepository implements ICronRepository {
+class CronProductRepository implements ICronProductRepository {
   private collectionPromise: Promise<Db>;
 
   constructor() {
@@ -167,4 +167,4 @@ class CronRepository implements ICronRepository {
   }
 }
 
-export { CronRepository };
+export { CronProductRepository };

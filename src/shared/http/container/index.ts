@@ -1,6 +1,6 @@
 import { container } from 'tsyringe';
-import { CronRepository } from '@app/CronJob/infra/mongoDb/repositories/CronRepository';
-import { ICronRepository } from '@app/CronJob/infra/ICronRepostory';
+import { CronProductRepository } from '@app/CronJob/infra/mongoDb/repositories/CronProductRepository';
+import { ICronProductRepository } from '@app/CronJob/infra/ICronProductRepostory';
 import { IProductRepository } from '@app/Products/infra/IProductRepository';
 import { ProductRepository } from '@app/Products/infra/mongoDb/repositories/PoductRepository';
 
@@ -9,4 +9,7 @@ container.registerSingleton<IProductRepository>(
   ProductRepository
 );
 
-container.registerSingleton<ICronRepository>('CronRepository', CronRepository);
+container.registerSingleton<ICronProductRepository>(
+  'CronProductRepository',
+  CronProductRepository
+);

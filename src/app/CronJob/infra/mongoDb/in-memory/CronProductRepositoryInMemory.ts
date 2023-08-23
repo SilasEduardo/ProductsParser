@@ -1,7 +1,7 @@
 import { Product } from '../model/Product';
-import { ICronRepository } from '../../ICronRepostory';
+import { ICronProductRepository } from '../../ICronProductRepostory';
 
-class CronRepositoryInMemory implements ICronRepository {
+class CronProductRepositoryInMemory implements ICronProductRepository {
   bd: Product[] = [];
   constructor() {
     this.bd = [];
@@ -126,4 +126,4 @@ class CronRepositoryInMemory implements ICronRepository {
   }
 }
 
-export { CronRepositoryInMemory };
+export { CronProductRepositoryInMemory };
