@@ -1,3 +1,4 @@
+import { AppError } from '@shared/errors/AppError';
 import { ProductRepositoryInmemory } from '../../infra/mongoDb/in-memory/PoductRepositoryInMemory';
 import { ListAllProductUserCase } from './listAllProductsUserCase';
 
@@ -12,27 +13,14 @@ describe('Create product', () => {
     );
   });
 
-  async function checker() {
-    const check = await listAllProductUserCase.execute();
-    if (check) {
-      return true;
-    }
-    return false;
-  }
+  it('should be able to return the product ', async () => {
+    const product = await listAllProductUserCase.execute();
 
-  it('Must return success if checker is true', async () => {
-    const resultado = checker();
-    if (resultado) {
-      expect(resultado).toBeTruthy();
-    }
-    expect(resultado).toBeTruthy();
+    expect(product).toBeTruthy();
   });
-
-  it('Should throw an error if checker is false', async () => {
-    const resultado = await checker();
-
-    if (!resultado) {
-      expect(resultado).toBeFalsy();
-    }
+  it("don't should be possible to return product does not exist", async () => {
+    expect(async () => {
+      await listAllProductUserCase.execute();
+    }).rejects.toBeInstanceOf(AppError);
   });
 });

@@ -1,36 +1,26 @@
 import { ProductRepositoryInmemory } from '../../infra/mongoDb/in-memory/PoductRepositoryInMemory';
 import { GetProductUserCase } from './getProducUserCase';
+import { AppError } from '../../../../shared/errors/AppError';
 
 let deleteProductUserCase: GetProductUserCase;
 let productRepositoryInmemory: ProductRepositoryInmemory;
 
-describe('Create product', () => {
+describe('Get product', () => {
   beforeAll(() => {
     productRepositoryInmemory = new ProductRepositoryInmemory();
     deleteProductUserCase = new GetProductUserCase(productRepositoryInmemory);
   });
 
-  async function checker() {
-    const check = await deleteProductUserCase.execute('17');
-    if (check) {
-      return true;
+  it('should be able to return the product ', async () => {
+    let product = await deleteProductUserCase.execute('17');
+    if (product) {
+      product = true;
     }
-    return false;
-  }
-
-  it('Must return success if checker is true', async () => {
-    const resultado = checker();
-    if (resultado) {
-      expect(resultado).toBeTruthy();
-    }
-    expect(resultado).toBeTruthy();
+    expect(product).toBeTruthy();
   });
-
-  it('Should throw an error if checker is false', async () => {
-    const resultado = await checker();
-
-    if (!resultado) {
-      expect(resultado).toBeFalsy();
-    }
+  it("don't should be possible to return product does not exist", async () => {
+    expect(async () => {
+      await deleteProductUserCase.execute('80');
+    }).rejects.toBeInstanceOf(AppError);
   });
 });

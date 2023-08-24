@@ -5,7 +5,7 @@ import { DeleteProductUserCase } from './deleteProductUserCase';
 let deleteProductUserCase: DeleteProductUserCase;
 let productRepositoryInmemory: ProductRepositoryInmemory;
 
-describe('delete file', () => {
+describe('Delete Product', () => {
   beforeAll(() => {
     productRepositoryInmemory = new ProductRepositoryInmemory();
     deleteProductUserCase = new DeleteProductUserCase(
@@ -14,8 +14,8 @@ describe('delete file', () => {
   });
 
   it('should be able to change status to trash', async () => {
-    const category = await deleteProductUserCase.execute('17');
-    expect(category).toBeTruthy();
+    const product = await deleteProductUserCase.execute('17');
+    expect(product).toBeTruthy();
   });
   it("don't should be possible to delete a product that doesn't exist", async () => {
     expect(async () => {

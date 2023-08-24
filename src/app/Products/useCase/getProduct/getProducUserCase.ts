@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 import { inject, injectable } from 'tsyringe';
 import { IProductRepository } from '@app/Products/infra/IProductRepository';
+import { AppError } from '../../../../shared/errors/AppError';
 
 @injectable()
 class GetProductUserCase {
@@ -11,7 +12,12 @@ class GetProductUserCase {
   ) {}
   execute(code: string) {
     const product = this.poductRepository.getProduct(code);
-    return product;
+
+    if (product) {
+      return product;
+    }
+
+    throw new AppError('Error in Database');
   }
 }
 
