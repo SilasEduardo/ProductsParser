@@ -10,7 +10,6 @@ class CreateCronProductUseCase {
   ) {}
   async execute() {
     const product = await this.poductRepository.updateDB();
-
     return product;
   }
 }

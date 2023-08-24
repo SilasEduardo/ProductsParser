@@ -1,11 +1,11 @@
 import { Router } from 'express';
 
-import { CreateCronController } from '@app/CronJob/useCase/createCron/createCronController';
+import { CreateCronProductController } from '@app/CronJob/useCase/createCron/createCronProductController';
 
 const cronRoutes = Router();
 
-const createCronController = new CreateCronController();
+const createCronProductController = new CreateCronProductController();
 
-cronRoutes.post('/', createCronController.handle);
+cronRoutes.post('/', createCronProductController.handle);
 
 export { cronRoutes };

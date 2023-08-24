@@ -22,61 +22,36 @@ class CronProductRepository implements ICronProductRepository {
     return db;
   }
 
-  async updateDB(): Promise<boolean | undefined> {
-    const db = await this.collectionPromise;
-
+  async nameFileExists(nameFile: string): Promise<boolean> {
     const getNames = await axios.get(
       'https://challenges.coode.sh/food/data/json/index.txt'
     );
     const names = getNames.data.trim().split('\n');
-    const collections = await db.listCollections({}).toArray();
+    const check = names.find((name: string) => name === nameFile);
 
-    if (collections.length > 9) {
-      console.log('all files are already created');
-      return true;
-    }
-
-    for await (const name of names) {
-      let number = 1;
-      if (collections.length > 0) {
-        number = Math.max(
-          ...collections
-            .map((doc) => parseInt(doc.name[10], 10))
-            .filter((number) => number)
-        );
-        number++;
-      }
-
-      const fileName = `products_0${number}.json.gz`;
-
-      const nameFile = fileName.replace('.json.gz', '.json');
-      await this.downloadFileFromURL(fileName);
-      await this.extractGzipFile(fileName, nameFile);
-      await this.insertToDB(nameFile);
-      console.log(`${name} was created in the database `);
-
-      return true;
-    }
+    return check;
   }
 
-  async downloadFileFromURL(filename: string): Promise<void> {
+  async downloadFileFromURL(filename: string): Promise<boolean | undefined> {
     const url = `https://challenges.coode.sh/food/data/json/${filename}`;
+    const check = this.nameFileExists(filename);
     try {
       const response = await axios.get(url, { responseType: 'stream' });
       const fileStream = fs.createWriteStream(`./tmp/${filename}`);
 
-      const download = await downloadFile(fileStream, response);
-      return download;
+      await downloadFile(fileStream, response);
+      return check;
     } catch (error) {
       console.error('Error in the request:', error);
     }
   }
 
   async deleteFile(nameJson: string): Promise<boolean> {
+    const check = this.nameFileExists(nameJson);
     try {
       fs.unlinkSync(`./tmp/${nameJson}`);
       console.log('File deleted successfully.');
-      return true;
+      return check;
     } catch (err) {
       console.error('An error occurred while deleting the file:', err);
       return false;
@@ -86,12 +61,13 @@ class CronProductRepository implements ICronProductRepository {
   async extractGzipFile(
     inputFilename: string,
     outputFilename: string
-  ): Promise<void> {
+  ): Promise<boolean | undefined> {
     try {
+      const check = this.nameFileExists(inputFilename);
       const readStream = fs.createReadStream(`./tmp/${inputFilename}`);
       const writeStream = fs.createWriteStream(`./tmp/${outputFilename}`);
-      const extract = await extractFile(readStream, writeStream);
-      return extract;
+      await extractFile(readStream, writeStream);
+      return check;
     } catch (error) {
       console.error('Error in extraction:', error);
     }
@@ -164,6 +140,42 @@ class CronProductRepository implements ICronProductRepository {
     this.deleteFile(`${name}`);
     this.deleteFile(`${name}.gz`);
     console.log('DONE');
+  }
+
+  async updateDB(): Promise<boolean | undefined> {
+    const db = await this.collectionPromise;
+
+    const getNames = await axios.get(
+      'https://challenges.coode.sh/food/data/json/index.txt'
+    );
+    const names = getNames.data.trim().split('\n');
+    const collections = await db.listCollections({}).toArray();
+
+    if (collections.length > 9) {
+      console.log('all files are already created');
+      return;
+    }
+
+    for await (const name of names) {
+      let number = 1;
+      if (collections.length > 0) {
+        number = Math.max(
+          ...collections
+            .map((doc) => parseInt(doc.name[10], 10))
+            .filter((number) => number)
+        );
+        number++;
+      }
+
+      const fileName = `products_0${number}.json.gz`;
+
+      const nameFile = fileName.replace('.json.gz', '.json');
+      await this.downloadFileFromURL(fileName);
+      await this.extractGzipFile(fileName, nameFile);
+      await this.insertToDB(nameFile);
+      console.log(`${name} was created in the database `);
+      return;
+    }
   }
 }
 

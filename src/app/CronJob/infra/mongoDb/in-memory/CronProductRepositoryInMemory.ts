@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { Product } from '../model/Product';
 import { ICronProductRepository } from '../../ICronProductRepostory';
 
@@ -10,58 +12,46 @@ class CronProductRepositoryInMemory implements ICronProductRepository {
   async updateDB(): Promise<boolean | undefined> {
     const file = 'products_01.json.gz';
     const file2 = 'products_01.json';
-    this.downloadFileFromURL(file);
-    this.extractGzipFile(file, file2);
-    this.deleteFile(file);
-    this.insertToDB(file);
-    return true;
+    const download = await this.downloadFileFromURL(file);
+    const extract = await this.extractGzipFile(file, file2);
+    const deleteFile = await this.deleteFile(file);
+    await this.insertToDB(file);
+    if (download && extract && deleteFile) return true;
+    return false;
   }
-  async downloadFileFromURL(filename: string): Promise<void> {
-    const files = [
-      'products_01.json.gz',
-      'products_02.json.gz',
-      'products_03.json.gz',
-      'products_04.json.gz',
-      'products_05.json.gz',
-      'products_06.json.gz',
-      'products_07.json.gz',
-      'products_08.json.gz',
-      'products_09.json.gz',
-    ];
 
-    const check = files.some((file) => file === filename);
-    console.log(check);
+  async nameFileExists(nameFile: string): Promise<boolean> {
+    const getNames = await axios.get(
+      'https://challenges.coode.sh/food/data/json/index.txt'
+    );
+    const names = getNames.data.trim().split('\n');
+    return names.some((name: string) => name === nameFile);
+  }
+
+  async downloadFileFromURL(filename: string): Promise<boolean | undefined> {
+    const check = this.nameFileExists(filename);
+    return check;
   }
 
   async deleteFile(filename: string): Promise<boolean> {
-    const files = [
-      'products_01.json.gz',
-      'products_02.json.gz',
-      'products_03.json.gz',
-      'products_04.json.gz',
-      'products_05.json.gz',
-      'products_06.json.gz',
-      'products_07.json.gz',
-      'products_08.json.gz',
-      'products_09.json.gz',
-    ];
-
-    const check = files.some((file) => file === filename);
+    const check = this.nameFileExists(filename);
     return check;
   }
 
   async extractGzipFile(
     inputFilename: string,
     outputFilename: string
-  ): Promise<void> {
+  ): Promise<boolean | undefined> {
     try {
+      const check = this.nameFileExists(inputFilename);
       console.log(inputFilename, outputFilename);
+      return check;
     } catch (error) {
       console.error('Error in extraction:', error);
     }
   }
 
-  async insertToDB(name: string): Promise<void> {
+  async insertToDB(filename: string): Promise<void> {
     const fileProducts = [
       {
         product: {
@@ -121,8 +111,17 @@ class CronProductRepositoryInMemory implements ICronProductRepository {
       };
 
       this.bd.push(data);
-      console.log(name);
     }
+  }
+
+  async checkUserExists(code: string): Promise<Product | undefined> {
+    const productExists = this.bd.find((product) => product.code === code);
+
+    if (productExists) {
+      return productExists;
+    }
+    console.log(`Product do not exists`);
+    return productExists;
   }
 }
 
