@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
-import { UpdateProductUserCase } from './updadeProductUserCase';
+import { UpdateProductUserCase } from './updateProductUserCase';
 
 class UpdateProductController {
   async handle(request: Request, response: Response) {

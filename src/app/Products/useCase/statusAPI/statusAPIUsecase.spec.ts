@@ -5,13 +5,13 @@ import { StatusAPIUserCase } from './statusAPIUsecase';
 let statusAPIUserCase: StatusAPIUserCase;
 let productRepositoryInmemory: ProductRepositoryInmemory;
 
-describe('Create product', () => {
+describe('Status API', () => {
   beforeAll(() => {
     productRepositoryInmemory = new ProductRepositoryInmemory();
     statusAPIUserCase = new StatusAPIUserCase(productRepositoryInmemory);
   });
 
-  it('should be able to return  all the products ', async () => {
+  it('should be able to return  status API ', async () => {
     const status = await statusAPIUserCase.execute();
 
     if (status) {
@@ -19,7 +19,7 @@ describe('Create product', () => {
       expect(status).toBeTruthy();
     }
   });
-  it("don't should be possible to return all products", async () => {
+  it("don't should be possible to return status API", async () => {
     const status = await productRepositoryInmemory.listProducts();
     if (!status) {
       expect(async () => {

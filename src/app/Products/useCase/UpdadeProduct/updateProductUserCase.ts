@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 import { inject, injectable } from 'tsyringe';
 import { IProductRepository } from '@app/Products/infra/IProductRepository';
+import { AppError } from '../../../../shared/errors/AppError';
 
 @injectable()
 class UpdateProductUserCase {
@@ -11,7 +12,12 @@ class UpdateProductUserCase {
   ) {}
   async execute(code: string, data: any) {
     const product = await this.poductRepository.updateProduct(code, data);
-    return product;
+
+    if (product) {
+      return product;
+    }
+
+    throw new AppError('product not exists');
   }
 }
 

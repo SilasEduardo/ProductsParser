@@ -5,7 +5,7 @@ import { ListAllProductUserCase } from './listAllProductsUserCase';
 let listAllProductUserCase: ListAllProductUserCase;
 let productRepositoryInmemory: ProductRepositoryInmemory;
 
-describe('Create product', () => {
+describe('List All Products', () => {
   beforeAll(() => {
     productRepositoryInmemory = new ProductRepositoryInmemory();
     listAllProductUserCase = new ListAllProductUserCase(
