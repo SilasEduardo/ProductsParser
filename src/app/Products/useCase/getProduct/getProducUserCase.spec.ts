@@ -1,17 +1,17 @@
-import { CronProductRepositoryInMemory } from '../../infra/mongoDb/in-memory/CronProductRepositoryInMemory';
-import { CreateCronProductUseCase } from './createCronProductUseCase';
+import { ProductRepositoryInmemory } from '../../infra/mongoDb/in-memory/PoductRepositoryInMemory';
+import { GetProductUserCase } from './getProducUserCase';
 
-let createCronUseCase: CreateCronProductUseCase;
-let cronRepositoryInMemory: CronProductRepositoryInMemory;
+let deleteProductUserCase: GetProductUserCase;
+let productRepositoryInmemory: ProductRepositoryInmemory;
 
 describe('Create product', () => {
   beforeAll(() => {
-    cronRepositoryInMemory = new CronProductRepositoryInMemory();
-    createCronUseCase = new CreateCronProductUseCase(cronRepositoryInMemory);
+    productRepositoryInmemory = new ProductRepositoryInmemory();
+    deleteProductUserCase = new GetProductUserCase(productRepositoryInmemory);
   });
 
   async function checker() {
-    const check = await createCronUseCase.execute();
+    const check = await deleteProductUserCase.execute('17');
     if (check) {
       return true;
     }

@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { inject, injectable } from 'tsyringe';
 import { IProductRepository } from '@app/Products/infra/IProductRepository';
 
@@ -8,7 +10,8 @@ class UpdateProductUserCase {
     private poductRepository: IProductRepository
   ) {}
   async execute(code: string, data: any) {
-    await this.poductRepository.updateProduct(code, data);
+    const product = await this.poductRepository.updateProduct(code, data);
+    return product;
   }
 }
 

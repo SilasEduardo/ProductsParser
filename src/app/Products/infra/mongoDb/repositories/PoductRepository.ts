@@ -1,4 +1,4 @@
-import { Db, WithId, UpdateResult } from 'mongodb';
+import { Db } from 'mongodb';
 import { IGetProductDTO } from '@app/Products/dtos/IGetProductDTO';
 import database from '@shared/http/database';
 import { runtime, getMemoryUsage } from '@utils/statusSistema';
@@ -32,7 +32,7 @@ class ProductRepository implements IProductRepository {
   }
 
   // eslint-disable-next-line consistent-return
-  async getProduct(code: string): Promise<WithId<Document> | null | undefined> {
+  async getProduct(code: string): Promise<any | undefined> {
     try {
       const db = await this.collectionPromise;
       const collections: any = await db.listCollections().toArray();
@@ -77,9 +77,7 @@ class ProductRepository implements IProductRepository {
     }
   }
 
-  async deleteProduc(
-    code: string
-  ): Promise<UpdateResult<Document> | undefined> {
+  async deleteProduc(code: string): Promise<boolean | undefined> {
     try {
       const db = await this.collectionPromise;
 
@@ -96,17 +94,17 @@ class ProductRepository implements IProductRepository {
         const result: any = await collection.updateOne({ code }, update);
         if (result.modifiedCount === 1) {
           console.log(`Document deleted in collection ${collectionName}.`);
-          return result.modifiedCount;
+          return true;
         }
       }
-
       console.log('document does not exist.');
+      return false;
     } catch (error: any) {
       console.error('Erro:', error);
     }
   }
 
-  async updateProduct(code: string, data: any): Promise<void> {
+  async updateProduct(code: string, data: any): Promise<any> {
     try {
       const { product_name, quantity } = data;
       const db = await this.collectionPromise;
@@ -123,12 +121,13 @@ class ProductRepository implements IProductRepository {
         const collectionName = collectionInfo.name;
         const collection = db.collection(collectionName);
 
-        const productE: any = await collection.updateOne(filter, update);
-        if (productE.modifiedCount === 1) {
+        const producte: any = await collection.updateOne(filter, update);
+        if (producte.modifiedCount === 1) {
           console.log('Document successfully updated.');
-          return;
+          return producte;
         }
       }
+
       console.log('Document not found or not updated.');
     } catch (error: any) {
       console.error('Erro:', error);

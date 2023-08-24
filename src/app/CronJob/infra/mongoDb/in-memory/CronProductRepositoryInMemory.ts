@@ -44,7 +44,6 @@ class CronProductRepositoryInMemory implements ICronProductRepository {
   ): Promise<boolean | undefined> {
     try {
       const check = this.nameFileExists(inputFilename);
-      console.log(inputFilename, outputFilename);
       return check;
     } catch (error) {
       console.error('Error in extraction:', error);

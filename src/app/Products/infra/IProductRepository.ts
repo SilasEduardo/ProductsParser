@@ -3,10 +3,10 @@ import { IGetProductDTO } from '../dtos/IGetProductDTO';
 
 interface IProductRepository {
   statusApi(): Promise<IGetProductDTO>;
-  getProduct(code: string): Promise<WithId<Document> | null | undefined>;
+  getProduct(code: string): Promise<any | undefined>;
   listProducts(): Promise<Array<any> | undefined>;
-  deleteProduc(code: string): Promise<UpdateResult<Document> | undefined>;
-  updateProduct(code: string, data: any): Promise<void>;
+  deleteProduct(code: string): Promise<boolean | undefined>;
+  updateProduct(code: string, data: any): Promise<any>;
 }
 
 export { IProductRepository };
