@@ -7,9 +7,8 @@ class CreateCronProductController {
   async handle(request: Request, response: Response) {
     const createCronUseCase = container.resolve(CreateCronProductUseCase);
 
-    const product = await createCronUseCase.execute();
-    if (product) response.status(200).json();
-    response.status(404).json();
+    createCronUseCase.execute();
+    response.status(200).json();
   }
 }
 

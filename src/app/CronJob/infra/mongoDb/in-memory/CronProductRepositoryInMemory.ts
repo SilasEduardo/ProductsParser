@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import { da } from 'date-fns/locale';
 import { Product } from '../model/Product';
 import { ICronProductRepository } from '../../ICronProductRepostory';
 

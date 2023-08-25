@@ -1,4 +1,3 @@
-import { WithId, UpdateResult } from 'mongodb';
 import { IGetProductDTO } from '../dtos/IGetProductDTO';
 
 interface IProductRepository {

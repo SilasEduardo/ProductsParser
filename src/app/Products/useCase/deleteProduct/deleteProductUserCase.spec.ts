@@ -5,7 +5,7 @@ import { DeleteProductUserCase } from './deleteProductUserCase';
 let deleteProductUserCase: DeleteProductUserCase;
 let productRepositoryInmemory: ProductRepositoryInmemory;
 
-describe('Delete Product', () => {
+describe('Delete ', () => {
   beforeAll(() => {
     productRepositoryInmemory = new ProductRepositoryInmemory();
     deleteProductUserCase = new DeleteProductUserCase(

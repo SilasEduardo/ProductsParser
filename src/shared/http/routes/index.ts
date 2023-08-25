@@ -7,6 +7,6 @@ const router = Router();
 
 router.use('/products', productsRoutes);
 router.use('/', statusRouter);
-router.use('/cron', cronRoutes);
+router.use(cronRoutes);
 
 export { router };

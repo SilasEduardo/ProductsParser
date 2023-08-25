@@ -77,7 +77,7 @@ class ProductRepository implements IProductRepository {
     }
   }
 
-  async deleteProduc(code: string): Promise<boolean | undefined> {
+  async deleteProduct(code: string): Promise<boolean | undefined> {
     try {
       const db = await this.collectionPromise;
 

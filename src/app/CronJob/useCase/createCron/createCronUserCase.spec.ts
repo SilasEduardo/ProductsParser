@@ -1,3 +1,4 @@
+import { AppError } from '../../../../shared/errors/AppError';
 import { CronProductRepositoryInMemory } from '../../infra/mongoDb/in-memory/CronProductRepositoryInMemory';
 import { CreateCronProductUseCase } from './createCronProductUseCase';
 
@@ -10,27 +11,17 @@ describe('Create product', () => {
     createCronUseCase = new CreateCronProductUseCase(cronRepositoryInMemory);
   });
 
-  async function checker() {
-    const check = await createCronUseCase.execute();
-    if (check) {
-      return true;
-    }
-    return false;
-  }
-
   it('Must return success if checker is true', async () => {
-    const resultado = checker();
-    if (resultado) {
-      expect(resultado).toBeTruthy();
-    }
-    expect(resultado).toBeTruthy();
+    const product = await createCronUseCase.execute();
+    expect(product).toBeTruthy();
   });
 
   it('Should throw an error if checker is false', async () => {
-    const resultado = await checker();
-
-    if (!resultado) {
-      expect(resultado).toBeFalsy();
+    const product = await createCronUseCase.execute();
+    if (!product) {
+      expect(async () => {
+        await createCronUseCase.execute();
+      }).rejects.toBeInstanceOf(AppError);
     }
   });
 });

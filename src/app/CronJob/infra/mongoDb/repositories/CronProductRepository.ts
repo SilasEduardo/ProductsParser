@@ -156,7 +156,7 @@ class CronProductRepository implements ICronProductRepository {
       return;
     }
 
-    for await (const name of names) {
+    for (const name of names) {
       let number = 1;
       if (collections.length > 0) {
         number = Math.max(
