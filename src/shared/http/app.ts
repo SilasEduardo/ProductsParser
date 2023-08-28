@@ -2,10 +2,11 @@ import 'reflect-metadata';
 import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import database from './database';
+import { createKey } from '@utils/createkey';
+import database from '../database';
 import { AppError } from '../errors/AppError';
-import './container';
-// import '@config/cronConfig';
+import '../container';
+import '@config/cronConfig';
 import { router } from './routes';
 
 dotenv.config();
@@ -38,6 +39,7 @@ async function startServe() {
   app.use(router);
   app.use(express.json());
   app.use(cors());
+  createKey();
   serverErro();
 }
 startServe();

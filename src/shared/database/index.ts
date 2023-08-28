@@ -8,7 +8,7 @@ class Database {
     this.db = this.client?.db();
   }
 
-  async connect(url: string): Promise<MongoClient> {
+  async connect(): Promise<MongoClient> {
     if (!this.client) {
       const url =
         process.env.NODE_ENV === 'test'

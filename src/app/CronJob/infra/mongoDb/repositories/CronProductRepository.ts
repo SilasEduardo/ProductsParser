@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { Db } from 'mongodb';
 import axios from 'axios';
 import { Product } from '@app/CronJob/infra/mongoDb/model/Product';
-import database from '@shared/http/database';
+import database from '@shared/database';
 import { downloadFile, extractFile, status } from '@utils/fileImports';
 import { ICronProductRepository } from '../../ICronProductRepostory';
 

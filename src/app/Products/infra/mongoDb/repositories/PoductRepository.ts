@@ -1,6 +1,6 @@
 import { Db } from 'mongodb';
 import { IGetProductDTO } from '@app/Products/dtos/IGetProductDTO';
-import database from '@shared/http/database';
+import database from '@shared/database';
 import { runtime, getMemoryUsage } from '@utils/statusSistema';
 import { status } from '@utils/fileImports';
 import { IProductRepository } from '../../IProductRepository';

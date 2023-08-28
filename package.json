@@ -33,6 +33,7 @@
     "@types/jest": "^29.5.3",
     "@types/node": "^20.5.0",
     "@types/node-cron": "^3.0.8",
+    "@types/uuid": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "eslint": "^8.47.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -56,9 +57,8 @@
   "dependencies": {
     "@types/dotenv": "^8.2.0",
     "@types/moment-timezone": "^0.5.30",
-    "axios": "^1.4.0",
     "@types/supertest": "^2.0.12",
-    "supertest": "^6.3.3",
+    "axios": "^1.4.0",
     "cors": "^2.8.5",
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
@@ -69,6 +69,8 @@
     "node-cron": "^3.0.2",
     "reflect-metadata": "^0.1.13",
     "saslprep": "^1.0.3",
-    "tsyringe": "^4.8.0"
+    "supertest": "^6.3.3",
+    "tsyringe": "^4.8.0",
+    "uuid": "^9.0.0"
   }
 }
