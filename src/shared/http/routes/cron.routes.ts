@@ -6,6 +6,6 @@ const cronRoutes = Router();
 
 const createCronProductController = new CreateCronProductController();
 
-cronRoutes.get('/cron', createCronProductController.handle);
+cronRoutes.get('/', createCronProductController.handle);
 
 export { cronRoutes };

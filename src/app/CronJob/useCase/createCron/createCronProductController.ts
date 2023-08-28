@@ -6,7 +6,6 @@ import { CreateCronProductUseCase } from './createCronProductUseCase';
 class CreateCronProductController {
   async handle(request: Request, response: Response) {
     const createCronUseCase = container.resolve(CreateCronProductUseCase);
-
     createCronUseCase.execute();
     response.status(200).json();
   }

@@ -1,5 +1,19 @@
 version: '3.7'
 services:
+  database:
+    image: mongo
+    container_name: product_parser
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: product001
+      MONGO_INITDB_DATABASE: test_integration
+
+    volumes:
+      - mongo_data:/data/db
+
   app:
     build: .
     container_name: productsparse
@@ -7,3 +21,6 @@ services:
       - 3333:3333
     volumes:
       - .:/user/app
+
+volumes:
+  mongo_data:

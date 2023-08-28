@@ -8,10 +8,14 @@ class Database {
     this.db = this.client?.db();
   }
 
-  async connect(): Promise<MongoClient> {
+  async connect(url: string): Promise<MongoClient> {
     if (!this.client) {
-      const uri = `mongodb+srv://silas:${process.env.DATABASE_PASSWORD}@cluster0.5yguqpd.mongodb.net/`;
-      this.client = new MongoClient(uri);
+      const url =
+        process.env.NODE_ENV === 'test'
+          ? process.env.DATABASE_URL_TEST || ''
+          : process.env.DATABASE_URL || '';
+      console.log(url);
+      this.client = new MongoClient(url);
       await this.client.connect();
     }
     return this.client;

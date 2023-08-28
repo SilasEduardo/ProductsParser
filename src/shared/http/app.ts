@@ -2,9 +2,9 @@ import 'reflect-metadata';
 import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import database from './database';
 import { AppError } from '../errors/AppError';
 import './container';
-import database from './database';
 // import '@config/cronConfig';
 import { router } from './routes';
 
@@ -40,6 +40,5 @@ async function startServe() {
   app.use(cors());
   serverErro();
 }
-
 startServe();
 export { app };

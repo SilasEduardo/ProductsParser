@@ -1,6 +1,6 @@
-import { AppError } from '../../../../shared/errors/AppError';
-import { CronProductRepositoryInMemory } from '../../infra/mongoDb/in-memory/CronProductRepositoryInMemory';
-import { CreateCronProductUseCase } from './createCronProductUseCase';
+import { AppError } from '../../src/shared/errors/AppError';
+import { CronProductRepositoryInMemory } from '../../src/app/CronJob/infra/mongoDb/in-memory/CronProductRepositoryInMemory';
+import { CreateCronProductUseCase } from '../../src/app/CronJob/useCase/createCron/createCronProductUseCase';
 
 let createCronUseCase: CreateCronProductUseCase;
 let cronRepositoryInMemory: CronProductRepositoryInMemory;

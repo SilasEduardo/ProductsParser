@@ -6,7 +6,6 @@ import axios from 'axios';
 import { Product } from '@app/CronJob/infra/mongoDb/model/Product';
 import database from '@shared/http/database';
 import { downloadFile, extractFile, status } from '@utils/fileImports';
-
 import { ICronProductRepository } from '../../ICronProductRepostory';
 
 class CronProductRepository implements ICronProductRepository {

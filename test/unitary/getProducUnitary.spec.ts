@@ -1,6 +1,6 @@
-import { ProductRepositoryInmemory } from '../../infra/mongoDb/in-memory/PoductRepositoryInMemory';
-import { GetProductUserCase } from './getProducUserCase';
-import { AppError } from '../../../../shared/errors/AppError';
+import { AppError } from '../../src/shared/errors/AppError';
+import { ProductRepositoryInmemory } from '../../src/app/Products/infra/mongoDb/in-memory/PoductRepositoryInMemory';
+import { GetProductUserCase } from '../../src/app/Products/useCase/getProduct/getProducUserCase';
 
 let deleteProductUserCase: GetProductUserCase;
 let productRepositoryInmemory: ProductRepositoryInmemory;
