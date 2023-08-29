@@ -12,11 +12,9 @@ class UpdateProductUserCase {
   ) {}
   async execute(code: string, data: any) {
     const product = await this.poductRepository.updateProduct(code, data);
-
     if (product) {
       return product;
     }
-
     throw new AppError('product not exists');
   }
 }

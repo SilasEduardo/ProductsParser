@@ -8,8 +8,8 @@ describe('Test Integration execute Cron', () => {
     const randomApiKey = process.env.RANDOM_NUMBER || '';
     const url_app = process.env.APP_URL || '';
     const response = await request(url_app)
-      .get('/cron')
+      .post('/cron')
       .set('x-api-key', randomApiKey);
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(201);
   });
 });

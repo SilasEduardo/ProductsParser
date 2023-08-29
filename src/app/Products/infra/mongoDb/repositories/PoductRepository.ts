@@ -85,9 +85,10 @@ class ProductRepository implements IProductRepository {
 
       const update = {
         $set: {
-          status: status(code),
+          status: status('trash'),
         },
       };
+
       for (const collectionInfo of collections) {
         const collectionName = collectionInfo.name;
         const collection = db.collection(collectionName);
@@ -121,14 +122,15 @@ class ProductRepository implements IProductRepository {
         const collectionName = collectionInfo.name;
         const collection = db.collection(collectionName);
 
-        const producte: any = await collection.updateOne(filter, update);
-        if (producte.modifiedCount === 1) {
+        const product: any = await collection.updateOne(filter, update);
+        if (product.modifiedCount === 1) {
           console.log('Document successfully updated.');
-          return producte;
+          return true;
         }
       }
 
       console.log('Document not found or not updated.');
+      return false;
     } catch (error: any) {
       console.error('Erro:', error);
     }

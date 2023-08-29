@@ -8,7 +8,7 @@ class ListProductController {
     const product = await listProductController.execute();
 
     if (product) {
-      response.status(200).json(product);
+      response.status(201).json(product);
     } else {
       response.status(404).json({ message: 'Product not found' });
     }
