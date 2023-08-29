@@ -14,7 +14,6 @@ class Database {
         process.env.NODE_ENV === 'test'
           ? process.env.DATABASE_URL_TEST || ''
           : process.env.DATABASE_URL || '';
-      console.log(url);
       this.client = new MongoClient(url);
       await this.client.connect();
     }

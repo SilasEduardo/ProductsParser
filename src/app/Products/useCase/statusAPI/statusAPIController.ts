@@ -6,7 +6,7 @@ class StatusAPIController {
   async handle(request: Request, response: Response) {
     const statusApiUserCase = container.resolve(StatusAPIUserCase);
     const dataStatus = await statusApiUserCase.execute();
-    response.status(201).json(dataStatus);
+    response.status(200).json(dataStatus);
   }
 }
 

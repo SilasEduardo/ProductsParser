@@ -8,7 +8,7 @@ import swaggerFile from '../../swagger.json';
 import database from '../database';
 import { AppError } from '../errors/AppError';
 import '../container';
-// import '@config/cronConfig';
+import '@config/cronConfig';
 import { router } from './routes';
 
 dotenv.config();
